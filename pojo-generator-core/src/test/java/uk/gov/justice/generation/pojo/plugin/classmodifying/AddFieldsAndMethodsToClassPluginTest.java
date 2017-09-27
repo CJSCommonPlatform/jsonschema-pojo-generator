@@ -17,7 +17,6 @@ import static uk.gov.justice.generation.pojo.dom.DefinitionType.STRING;
 
 import uk.gov.justice.generation.pojo.dom.ClassDefinition;
 import uk.gov.justice.generation.pojo.dom.FieldDefinition;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
 import uk.gov.justice.generation.pojo.generators.FieldGenerator;
 import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
 
@@ -38,9 +37,6 @@ public class AddFieldsAndMethodsToClassPluginTest {
 
     @Mock
     private JavaGeneratorFactory generatorFactory;
-
-    @Mock
-    private ClassNameFactory classNameFactory;
 
     @Mock
     private PluginContext pluginContext;
@@ -85,11 +81,10 @@ public class AddFieldsAndMethodsToClassPluginTest {
         final PluginContext pluginContext = mock(PluginContext.class);
 
         when(pluginContext.getJavaGeneratorFactory()).thenReturn(generatorFactory);
-        when(pluginContext.getClassNameFactory()).thenReturn(classNameFactory);
         when(generatorFactory.createGeneratorFor(fieldDefinition, pluginContext)).thenReturn(fieldGenerator);
         when(fieldGenerator.generateField()).thenReturn(fieldSpec);
         when(fieldGenerator.generateMethods()).thenReturn(Stream.of(methodSpec));
-        when(classNameFactory.createTypeNameFrom(fieldDefinition, pluginContext)).thenReturn(ClassName.get(String.class));
+        when(generatorFactory.createTypeNameFrom(fieldDefinition, pluginContext)).thenReturn(ClassName.get(String.class));
 
         final TypeSpec.Builder typeSpecBuilder = classBuilder("ClassName");
 

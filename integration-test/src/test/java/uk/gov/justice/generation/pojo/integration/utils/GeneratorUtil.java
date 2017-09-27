@@ -118,7 +118,6 @@ public class GeneratorUtil {
 
         final PluginContext pluginContext = new PluginContext(
                 javaGeneratorFactory,
-                classNameFactory,
                 generationContext.getSourceFilename(),
                 classModifyingPlugins,
                 generatorProperties);

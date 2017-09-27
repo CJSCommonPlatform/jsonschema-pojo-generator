@@ -8,7 +8,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import static org.apache.commons.lang3.StringUtils.capitalize;
 
 import uk.gov.justice.generation.pojo.dom.Definition;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
+import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
 import uk.gov.justice.generation.pojo.plugin.classmodifying.PluginContext;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public class BuilderMethodFactory {
 
     public List<MethodSpec> createTheWithMethods(
             final List<Definition> fieldDefinitions,
-            final ClassNameFactory classNameFactory,
+            final JavaGeneratorFactory javaGeneratorFactory,
             final ClassName builderClassName,
             final PluginContext pluginContext) {
 
@@ -33,7 +33,7 @@ public class BuilderMethodFactory {
                 .map(fieldDefinition -> generateWithMethod(
                         fieldDefinition,
                         builderClassName,
-                        classNameFactory,
+                        javaGeneratorFactory,
                         pluginContext))
                 .collect(toList());
     }
@@ -55,11 +55,11 @@ public class BuilderMethodFactory {
     private MethodSpec generateWithMethod(
             final Definition fieldDefinition,
             final ClassName builderClassName,
-            final ClassNameFactory classNameFactory,
+            final JavaGeneratorFactory javaGeneratorFactory,
             final PluginContext pluginContext) {
 
         final String fieldName = fieldDefinition.getFieldName();
-        final TypeName typeName = classNameFactory.createTypeNameFrom(fieldDefinition, pluginContext);
+        final TypeName typeName = javaGeneratorFactory.createTypeNameFrom(fieldDefinition, pluginContext);
 
         return methodBuilder("with" + capitalize(fieldName))
                 .addModifiers(PUBLIC)

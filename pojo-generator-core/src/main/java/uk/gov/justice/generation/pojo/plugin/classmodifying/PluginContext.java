@@ -3,9 +3,7 @@ package uk.gov.justice.generation.pojo.plugin.classmodifying;
 import static java.util.stream.Collectors.toList;
 
 import uk.gov.justice.generation.pojo.core.PojoGeneratorProperties;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
 import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
-import uk.gov.justice.maven.generator.io.files.parser.core.GeneratorProperties;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,21 +16,18 @@ import java.util.Set;
 public class PluginContext {
 
     private final JavaGeneratorFactory generatorFactory;
-    private final ClassNameFactory classNameFactory;
     private final String sourceFilename;
     private final List<ClassModifyingPlugin> classModifyingPlugins;
     private final PojoGeneratorProperties generatorProperties;
 
     public PluginContext(final JavaGeneratorFactory generatorFactory,
-                         final ClassNameFactory classNameFactory,
                          final String sourceFilename,
                          final List<ClassModifyingPlugin> classModifyingPlugins,
-                         final GeneratorProperties generatorProperties) {
+                         final PojoGeneratorProperties generatorProperties) {
         this.generatorFactory = generatorFactory;
-        this.classNameFactory = classNameFactory;
         this.sourceFilename = sourceFilename;
         this.classModifyingPlugins = classModifyingPlugins;
-        this.generatorProperties = (PojoGeneratorProperties) generatorProperties;
+        this.generatorProperties = generatorProperties;
     }
 
     /**
@@ -42,15 +37,6 @@ public class PluginContext {
      */
     public JavaGeneratorFactory getJavaGeneratorFactory() {
         return generatorFactory;
-    }
-
-    /**
-     * Gets the {@link JavaGeneratorFactory} for the application
-     *
-     * @return The {@link JavaGeneratorFactory}
-     */
-    public ClassNameFactory getClassNameFactory() {
-        return classNameFactory;
     }
 
     /**

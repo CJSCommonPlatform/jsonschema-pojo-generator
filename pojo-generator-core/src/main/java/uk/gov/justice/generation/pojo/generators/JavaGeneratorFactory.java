@@ -13,6 +13,9 @@ import uk.gov.justice.generation.pojo.plugin.classmodifying.PluginContext;
 
 import java.util.List;
 
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.TypeName;
+
 /**
  * Factory for creating the correct generator for the specified {@link Definition}
  */
@@ -42,6 +45,21 @@ public class JavaGeneratorFactory {
                 .filter(definition -> isNotHardCoded(definition, generationContext.getIgnoredClassNames()))
                 .map(definition -> getClassGeneratable(pluginProvider, pluginContext, definition))
                 .collect(toList());
+    }
+
+    /**
+     * Generate to correct return type/parameter type for the specified {@link Definition}
+     *
+     * @param definition    The definition for which to generate the correct return type
+     * @param pluginContext The {@link PluginContext}
+     * @return The correct type for returns and parameters
+     */
+    public TypeName createTypeNameFrom(final Definition definition, final PluginContext pluginContext) {
+        return classNameFactory.createTypeNameFrom(definition, pluginContext);
+    }
+
+    public ClassName createClassNameFrom(final ClassDefinition classDefinition) {
+        return classNameFactory.createClassNameFrom(classDefinition);
     }
 
     private boolean isClassOrEnum(final Definition definition) {

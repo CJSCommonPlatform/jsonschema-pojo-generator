@@ -7,7 +7,6 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 
 import uk.gov.justice.generation.pojo.dom.ClassDefinition;
 import uk.gov.justice.generation.pojo.dom.Definition;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
 import uk.gov.justice.generation.pojo.generators.ElementGeneratable;
 import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
 
@@ -56,7 +55,7 @@ public class AddFieldsAndMethodsToClassPlugin implements ClassModifyingPlugin {
 
         final MethodSpec constructor = buildConstructor(
                 fieldDefinitions,
-                pluginContext.getClassNameFactory(),
+                javaGeneratorFactory,
                 pluginContext);
         classBuilder.addMethod(constructor)
                 .addFields(fields)
@@ -67,13 +66,13 @@ public class AddFieldsAndMethodsToClassPlugin implements ClassModifyingPlugin {
 
     private MethodSpec buildConstructor(
             final List<Definition> definitions,
-            final ClassNameFactory classNameFactory,
+            final JavaGeneratorFactory javaGeneratorFactory,
             final PluginContext pluginContext) {
         final List<String> fieldNames = definitions.stream().map(Definition::getFieldName).collect(toList());
 
         final List<ParameterSpec> constructorParameters = constructorParameters(
                 definitions,
-                classNameFactory,
+                javaGeneratorFactory,
                 pluginContext);
         return constructorBuilder()
                 .addModifiers(PUBLIC)
@@ -92,11 +91,11 @@ public class AddFieldsAndMethodsToClassPlugin implements ClassModifyingPlugin {
 
     private List<ParameterSpec> constructorParameters(
             final List<Definition> definitions,
-            final ClassNameFactory classNameFactory,
+            final JavaGeneratorFactory javaGeneratorFactory,
             final PluginContext pluginContext) {
         return definitions.stream()
                 .map(definition -> {
-                    final TypeName typeName = classNameFactory.createTypeNameFrom(definition, pluginContext);
+                    final TypeName typeName = javaGeneratorFactory.createTypeNameFrom(definition, pluginContext);
                     return ParameterSpec.builder(typeName, definition.getFieldName(), FINAL).build();
                 })
                 .collect(toList());

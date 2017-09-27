@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import uk.gov.justice.generation.pojo.dom.Definition;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
+import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
 import uk.gov.justice.generation.pojo.plugin.classmodifying.PluginContext;
 
 import java.util.List;
@@ -34,18 +34,18 @@ public class BuilderFieldFactoryTest {
         final Definition fieldDefinition_2 = mock(Definition.class);
         final List<Definition> fieldDefinitions = asList(fieldDefinition_1, fieldDefinition_2);
 
-        final ClassNameFactory classNameFactory = mock(ClassNameFactory.class);
+        final JavaGeneratorFactory javaGeneratorFactory = mock(JavaGeneratorFactory.class);
         final PluginContext pluginContext = mock(PluginContext.class);
 
         when(fieldDefinition_1.getFieldName()).thenReturn("fieldDefinition_1");
         when(fieldDefinition_2.getFieldName()).thenReturn("fieldDefinition_2");
 
-        when(classNameFactory.createTypeNameFrom(fieldDefinition_1, pluginContext)).thenReturn(get(String.class));
-        when(classNameFactory.createTypeNameFrom(fieldDefinition_2, pluginContext)).thenReturn(get(Integer.class));
+        when(javaGeneratorFactory.createTypeNameFrom(fieldDefinition_1, pluginContext)).thenReturn(get(String.class));
+        when(javaGeneratorFactory.createTypeNameFrom(fieldDefinition_2, pluginContext)).thenReturn(get(Integer.class));
 
         final List<FieldSpec> fields = builderFieldFactory.createFields(
                 fieldDefinitions,
-                classNameFactory,
+                javaGeneratorFactory,
                 pluginContext);
 
         assertThat(fields.size(), is(2));
