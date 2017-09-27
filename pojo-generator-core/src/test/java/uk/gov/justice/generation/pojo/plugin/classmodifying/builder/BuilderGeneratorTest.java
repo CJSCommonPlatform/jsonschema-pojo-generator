@@ -1,6 +1,7 @@
 package uk.gov.justice.generation.pojo.plugin.classmodifying.builder;
 
 import static com.squareup.javapoet.ClassName.get;
+import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -13,7 +14,7 @@ import static org.mockito.Mockito.when;
 
 import uk.gov.justice.generation.pojo.dom.ClassDefinition;
 import uk.gov.justice.generation.pojo.dom.Definition;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
+import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
 import uk.gov.justice.generation.pojo.plugin.classmodifying.PluginContext;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class BuilderGeneratorTest {
     private ClassDefinition classDefinition;
 
     @Mock
-    private ClassNameFactory classNameFactory;
+    private JavaGeneratorFactory javaGeneratorFactory;
 
     @Mock
     private BuilderMethodFactory builderMethodFactory;
@@ -64,17 +65,17 @@ public class BuilderGeneratorTest {
         final MethodSpec withMethod = MethodSpec.methodBuilder("withCaptainsLog").build();
         final MethodSpec buildMethod = MethodSpec.methodBuilder("build").build();
 
-        when(classNameFactory.createClassNameFrom(classDefinition)).thenReturn(pojoClassName);
+        when(javaGeneratorFactory.createClassNameFrom(classDefinition)).thenReturn(pojoClassName);
         when(classDefinition.getFieldName()).thenReturn(fieldName);
         when(classDefinition.getFieldDefinitions()).thenReturn(fieldDefinitions);
 
         when(builderFieldFactory.createFields(
                 fieldDefinitions,
-                classNameFactory,
+                javaGeneratorFactory,
                 pluginContext)).thenReturn(fieldSpecs);
         when(builderMethodFactory.createTheWithMethods(
                 fieldDefinitions,
-                classNameFactory,
+                javaGeneratorFactory,
                 builderClassName,
                 pluginContext)).thenReturn(singletonList(withMethod));
 
@@ -98,5 +99,27 @@ public class BuilderGeneratorTest {
     public void shouldGetTheCorrectSimpleNameForTheBuilder() throws Exception {
 
         assertThat(builderGenerator.getSimpleClassName(), is("Builder"));
+    }
+
+    @Test
+    public void shouldGenerateStaticGetBuilderMethod() throws Exception {
+
+        final String fieldName = "alcubierreDrive";
+        final String packageName = "org.bloggs.fred";
+        final String pojoSimpleName = capitalize(fieldName);
+        final ClassName pojoClassName = get(packageName, pojoSimpleName);
+        final ClassName pojoBuilder = pojoClassName.nestedClass("Builder");
+
+        when(classDefinition.getFieldName()).thenReturn(fieldName);
+        when(javaGeneratorFactory.createClassNameFrom(classDefinition)).thenReturn(pojoClassName);
+
+        final MethodSpec methodSpec = builderGenerator.generateStaticGetBuilderMethod();
+
+        assertThat(methodSpec.modifiers.size(), is(2));
+        assertThat(methodSpec.modifiers, hasItem(PUBLIC));
+        assertThat(methodSpec.modifiers, hasItem(STATIC));
+
+        assertThat(methodSpec.returnType, is(pojoBuilder));
+        assertThat(methodSpec.code.toString().trim(), is(format("return new %s();", pojoBuilder)));
     }
 }

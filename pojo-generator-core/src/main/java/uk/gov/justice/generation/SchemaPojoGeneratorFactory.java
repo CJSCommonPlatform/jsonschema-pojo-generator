@@ -28,6 +28,7 @@ public class SchemaPojoGeneratorFactory implements GeneratorFactory<File> {
 
     private final SourceWriter sourceWriter = new SourceWriter();
     private NonDuplicatingSourceWriter writer = new NonDuplicatingSourceWriter(new JavaSourceFileProvider(), sourceWriter);
+    private ClassNameFactoryProvider classNameFactoryProvider = new ClassNameFactoryProvider();
 
     @Override
     public Generator<File> create() {
@@ -35,8 +36,8 @@ public class SchemaPojoGeneratorFactory implements GeneratorFactory<File> {
                 new PluginProviderFactoryFactory().create(),
                 new DefinitionProvider(schemaLoader, visitableFactory, definitionBuilderVisitor, acceptorService),
                 new GeneratorContextProvider(javaFileSimpleNameLister),
-                new ClassNameFactoryProvider(),
-                new JavaGeneratorFactoryProvider(),
-                new JavaClassFileWriter(writer));
+                new JavaGeneratorFactoryProvider(classNameFactoryProvider),
+                new JavaClassFileWriter(writer),
+                new PluginContextProvider());
     }
 }

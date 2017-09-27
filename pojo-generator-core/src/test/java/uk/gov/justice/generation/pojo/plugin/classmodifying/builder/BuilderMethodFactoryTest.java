@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import uk.gov.justice.generation.pojo.dom.Definition;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
+import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
 import uk.gov.justice.generation.pojo.plugin.classmodifying.PluginContext;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class BuilderMethodFactoryTest {
     @Test
     public void shouldCreateTheWithMethods() throws Exception {
 
-        final ClassNameFactory classNameFactory = mock(ClassNameFactory.class);
+        final JavaGeneratorFactory javaGeneratorFactory = mock(JavaGeneratorFactory.class);
 
         final Definition fieldDefinition_1 = mock(Definition.class);
         final Definition fieldDefinition_2 = mock(Definition.class);
@@ -66,12 +66,12 @@ public class BuilderMethodFactoryTest {
         when(fieldDefinition_1.getFieldName()).thenReturn("fieldDefinition_1");
         when(fieldDefinition_2.getFieldName()).thenReturn("fieldDefinition_2");
 
-        when(classNameFactory.createTypeNameFrom(fieldDefinition_1, pluginContext)).thenReturn(get(String.class));
-        when(classNameFactory.createTypeNameFrom(fieldDefinition_2, pluginContext)).thenReturn(get(Integer.class));
+        when(javaGeneratorFactory.createTypeNameFrom(fieldDefinition_1, pluginContext)).thenReturn(get(String.class));
+        when(javaGeneratorFactory.createTypeNameFrom(fieldDefinition_2, pluginContext)).thenReturn(get(Integer.class));
 
         final List<MethodSpec> withMethods = builderMethodFactory.createTheWithMethods(
                 fieldDefinitions,
-                classNameFactory,
+                javaGeneratorFactory,
                 builderClassName,
                 pluginContext);
 

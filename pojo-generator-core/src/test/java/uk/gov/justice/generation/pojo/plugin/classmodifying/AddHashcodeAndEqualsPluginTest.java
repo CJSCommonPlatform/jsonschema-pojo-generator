@@ -17,7 +17,7 @@ import static uk.gov.justice.generation.pojo.dom.DefinitionType.STRING;
 import uk.gov.justice.generation.pojo.dom.ClassDefinition;
 import uk.gov.justice.generation.pojo.dom.Definition;
 import uk.gov.justice.generation.pojo.dom.FieldDefinition;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
+import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
 import uk.gov.justice.generation.pojo.plugin.FactoryMethod;
 import uk.gov.justice.generation.pojo.plugin.classmodifying.properties.AdditionalPropertiesDeterminer;
 
@@ -47,7 +47,7 @@ public class AddHashcodeAndEqualsPluginTest {
 
         final String expectedEqualsMethod =
                 "@java.lang.Override\n" +
-                "public boolean equals(final java.lang.Object obj) {\n  " +
+                        "public boolean equals(final java.lang.Object obj) {\n  " +
                         "if (this == obj) return true;\n  " +
                         "if (obj == null || getClass() != obj.getClass()) return false;\n  " +
                         "final org.bloggs.fred.MyClass that = (org.bloggs.fred.MyClass) obj;\n\n  " +
@@ -70,12 +70,12 @@ public class AddHashcodeAndEqualsPluginTest {
 
         final ClassDefinition classDefinition = mock(ClassDefinition.class);
         final PluginContext pluginContext = mock(PluginContext.class);
-        final ClassNameFactory classNameFactory = mock(ClassNameFactory.class);
+        final JavaGeneratorFactory javaGeneratorFactory = mock(JavaGeneratorFactory.class);
 
         when(classDefinition.getFieldDefinitions()).thenReturn(fieldDefinitions);
         when(additionalPropertiesDeterminer.shouldAddAdditionalProperties(classDefinition, pluginContext)).thenReturn(false);
-        when(pluginContext.getClassNameFactory()).thenReturn(classNameFactory);
-        when(classNameFactory.createClassNameFrom(classDefinition)).thenReturn(get("org.bloggs.fred", "MyClass"));
+        when(pluginContext.getJavaGeneratorFactory()).thenReturn(javaGeneratorFactory);
+        when(javaGeneratorFactory.createClassNameFrom(classDefinition)).thenReturn(get("org.bloggs.fred", "MyClass"));
 
         final TypeSpec.Builder builder = addHashcodeAndEqualsPlugin.generateWith(classBuilder, classDefinition, pluginContext);
 
@@ -92,11 +92,11 @@ public class AddHashcodeAndEqualsPluginTest {
 
         final ClassDefinition classDefinition = mock(ClassDefinition.class);
         final PluginContext pluginContext = mock(PluginContext.class);
-        final ClassNameFactory classNameFactory = mock(ClassNameFactory.class);
+        final JavaGeneratorFactory javaGeneratorFactory = mock(JavaGeneratorFactory.class);
 
         when(classDefinition.getFieldDefinitions()).thenReturn(emptyList());
-        when(pluginContext.getClassNameFactory()).thenReturn(classNameFactory);
-        when(classNameFactory.createClassNameFrom(classDefinition)).thenReturn(get("org.bloggs.fred", "MyClass"));
+        when(pluginContext.getJavaGeneratorFactory()).thenReturn(javaGeneratorFactory);
+        when(javaGeneratorFactory.createClassNameFrom(classDefinition)).thenReturn(get("org.bloggs.fred", "MyClass"));
 
         final TypeSpec.Builder builder = addHashcodeAndEqualsPlugin.generateWith(classBuilder, classDefinition, pluginContext);
 
@@ -134,12 +134,12 @@ public class AddHashcodeAndEqualsPluginTest {
 
         final ClassDefinition classDefinition = mock(ClassDefinition.class);
         final PluginContext pluginContext = mock(PluginContext.class);
-        final ClassNameFactory classNameFactory = mock(ClassNameFactory.class);
+        final JavaGeneratorFactory javaGeneratorFactory = mock(JavaGeneratorFactory.class);
 
         when(classDefinition.getFieldDefinitions()).thenReturn(fieldDefinitions);
-        when(pluginContext.getClassNameFactory()).thenReturn(classNameFactory);
+        when(pluginContext.getJavaGeneratorFactory()).thenReturn(javaGeneratorFactory);
         when(additionalPropertiesDeterminer.shouldAddAdditionalProperties(classDefinition, pluginContext)).thenReturn(true);
-        when(classNameFactory.createClassNameFrom(classDefinition)).thenReturn(get("org.bloggs.fred", "MyClass"));
+        when(javaGeneratorFactory.createClassNameFrom(classDefinition)).thenReturn(get("org.bloggs.fred", "MyClass"));
 
         assertThat(additionalPropertiesDeterminer.shouldAddAdditionalProperties(classDefinition, pluginContext), is(true));
 

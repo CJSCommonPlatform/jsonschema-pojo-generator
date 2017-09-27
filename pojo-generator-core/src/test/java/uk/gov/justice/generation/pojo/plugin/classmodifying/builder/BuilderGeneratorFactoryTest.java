@@ -6,7 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import uk.gov.justice.generation.pojo.dom.ClassDefinition;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
+import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
 import uk.gov.justice.generation.pojo.plugin.classmodifying.PluginContext;
 
 import java.lang.reflect.Field;
@@ -26,17 +26,17 @@ public class BuilderGeneratorFactoryTest {
     public void shouldCreateANewBuilderGeneratorWithTheCorrectDependencies() throws Exception {
 
         final ClassDefinition classDefinition = mock(ClassDefinition.class);
-        final ClassNameFactory classNameFactory = mock(ClassNameFactory.class);
+        final JavaGeneratorFactory javaGeneratorFactory = mock(JavaGeneratorFactory.class);
         final PluginContext pluginContext = mock(PluginContext.class);
 
         final BuilderGenerator builderGenerator = builderGeneratorFactory.create(
                 classDefinition,
-                classNameFactory,
+                javaGeneratorFactory,
                 pluginContext
         );
 
         assertThat(getPrivateFieldFrom(builderGenerator, "classDefinition"), is(classDefinition));
-        assertThat(getPrivateFieldFrom(builderGenerator, "classNameFactory"), is(classNameFactory));
+        assertThat(getPrivateFieldFrom(builderGenerator, "javaGeneratorFactory"), is(javaGeneratorFactory));
 
         assertThat(getPrivateFieldFrom(builderGenerator, "builderFieldFactory"), is(instanceOf(BuilderFieldFactory.class)));
         assertThat(getPrivateFieldFrom(builderGenerator, "builderMethodFactory"), is(instanceOf(BuilderMethodFactory.class)));

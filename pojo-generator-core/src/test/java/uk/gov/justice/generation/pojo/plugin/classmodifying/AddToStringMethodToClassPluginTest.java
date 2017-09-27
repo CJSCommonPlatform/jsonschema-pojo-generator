@@ -13,7 +13,7 @@ import static uk.gov.justice.generation.pojo.dom.DefinitionType.STRING;
 import uk.gov.justice.generation.pojo.dom.ClassDefinition;
 import uk.gov.justice.generation.pojo.dom.Definition;
 import uk.gov.justice.generation.pojo.dom.FieldDefinition;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
+import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
 import uk.gov.justice.generation.pojo.plugin.classmodifying.properties.AdditionalPropertiesDeterminer;
 
 import java.util.List;
@@ -55,12 +55,12 @@ public class AddToStringMethodToClassPluginTest {
 
         final ClassDefinition classDefinition = mock(ClassDefinition.class);
         final PluginContext pluginContext = mock(PluginContext.class);
-        final ClassNameFactory classNameFactory = mock(ClassNameFactory.class);
+        final JavaGeneratorFactory javaGeneratorFactory = mock(JavaGeneratorFactory.class);
 
         when(classDefinition.getFieldDefinitions()).thenReturn(fieldDefinitions);
         when(additionalPropertiesDeterminer.shouldAddAdditionalProperties(classDefinition, pluginContext)).thenReturn(false);
-        when(pluginContext.getClassNameFactory()).thenReturn(classNameFactory);
-        when(classNameFactory.createClassNameFrom(classDefinition)).thenReturn(get("org.bloggs.fred", "MyClass"));
+        when(pluginContext.getJavaGeneratorFactory()).thenReturn(javaGeneratorFactory);
+        when(javaGeneratorFactory.createClassNameFrom(classDefinition)).thenReturn(get("org.bloggs.fred", "MyClass"));
 
 
         final TypeSpec.Builder builder = addToStringMethodToClassPlugin.generateWith(classBuilder, classDefinition, pluginContext);
@@ -92,12 +92,12 @@ public class AddToStringMethodToClassPluginTest {
 
         final ClassDefinition classDefinition = mock(ClassDefinition.class);
         final PluginContext pluginContext = mock(PluginContext.class);
-        final ClassNameFactory classNameFactory = mock(ClassNameFactory.class);
+        final JavaGeneratorFactory javaGeneratorFactory = mock(JavaGeneratorFactory.class);
 
         when(classDefinition.getFieldDefinitions()).thenReturn(fieldDefinitions);
         when(additionalPropertiesDeterminer.shouldAddAdditionalProperties(classDefinition, pluginContext)).thenReturn(true);
-        when(pluginContext.getClassNameFactory()).thenReturn(classNameFactory);
-        when(classNameFactory.createClassNameFrom(classDefinition)).thenReturn(get("org.bloggs.fred", "MyClass"));
+        when(pluginContext.getJavaGeneratorFactory()).thenReturn(javaGeneratorFactory);
+        when(javaGeneratorFactory.createClassNameFrom(classDefinition)).thenReturn(get("org.bloggs.fred", "MyClass"));
 
 
         final TypeSpec.Builder builder = addToStringMethodToClassPlugin.generateWith(classBuilder, classDefinition, pluginContext);

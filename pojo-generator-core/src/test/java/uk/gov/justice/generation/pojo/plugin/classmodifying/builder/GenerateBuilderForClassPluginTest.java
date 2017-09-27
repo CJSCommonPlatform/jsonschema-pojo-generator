@@ -7,7 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import uk.gov.justice.generation.pojo.dom.ClassDefinition;
-import uk.gov.justice.generation.pojo.generators.ClassNameFactory;
+import uk.gov.justice.generation.pojo.generators.JavaGeneratorFactory;
 import uk.gov.justice.generation.pojo.plugin.classmodifying.GenerateBuilderForClassPlugin;
 import uk.gov.justice.generation.pojo.plugin.classmodifying.PluginContext;
 
@@ -38,15 +38,15 @@ public class GenerateBuilderForClassPluginTest {
 
         final TypeSpec.Builder outerClassBuilder = TypeSpec.classBuilder("MyClass");
         final ClassDefinition classDefinition = mock(ClassDefinition.class);
-        final ClassNameFactory classNameFactory = mock(ClassNameFactory.class);
+        final JavaGeneratorFactory javaGeneratorFactory = mock(JavaGeneratorFactory.class);
         final BuilderGenerator builderGenerator = mock(BuilderGenerator.class);
         final PluginContext pluginContext = mock(PluginContext.class);
 
-        when(pluginContext.getClassNameFactory()).thenReturn(classNameFactory);
+        when(pluginContext.getJavaGeneratorFactory()).thenReturn(javaGeneratorFactory);
         when(classDefinition.getFieldName()).thenReturn(fieldName);
         when(builderGeneratorFactory.create(
                 classDefinition,
-                classNameFactory,
+                javaGeneratorFactory,
                 pluginContext)).thenReturn(builderGenerator);
 
         when(builderGenerator.generate()).thenReturn(innerClassBuilder);

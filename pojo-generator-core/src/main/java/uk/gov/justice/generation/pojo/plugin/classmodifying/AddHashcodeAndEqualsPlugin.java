@@ -94,7 +94,7 @@ public class AddHashcodeAndEqualsPlugin implements ClassModifyingPlugin {
     private MethodSpec generateEquals(final ClassDefinition classDefinition, final PluginContext pluginContext) {
 
         final TypeName className = pluginContext
-                .getClassNameFactory()
+                .getJavaGeneratorFactory()
                 .createClassNameFrom(classDefinition);
 
         final List<String> fieldNames = classDefinition.getFieldDefinitions()

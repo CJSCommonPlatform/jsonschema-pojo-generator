@@ -34,7 +34,7 @@ public class AddToStringMethodToClassPlugin implements ClassModifyingPlugin {
 
 
         final ClassName className = pluginContext
-                .getClassNameFactory()
+                .getJavaGeneratorFactory()
                 .createClassNameFrom(classDefinition);
 
         final MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder("toString")
@@ -51,7 +51,7 @@ public class AddToStringMethodToClassPlugin implements ClassModifyingPlugin {
                 .map(Definition::getFieldName)
                 .collect(toList());
 
-        if(additionalPropertiesDeterminer.shouldAddAdditionalProperties(classDefinition, pluginContext)) {
+        if (additionalPropertiesDeterminer.shouldAddAdditionalProperties(classDefinition, pluginContext)) {
             fieldNames.add("additionalProperties");
         }
 
@@ -71,9 +71,9 @@ public class AddToStringMethodToClassPlugin implements ClassModifyingPlugin {
     private String getComma(final List<String> fieldNames, final int index) {
 
         if (index < fieldNames.size() - 1) {
-            return  ",";
+            return ",";
         }
-        
+
         return "";
     }
 }
