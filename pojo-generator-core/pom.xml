@@ -13,8 +13,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${org.json.version}</version>
         </dependency>
         <dependency>
             <groupId>uk.gov.justice.maven.generator</groupId>
@@ -27,13 +28,14 @@
             <version>${generator-maven-plugin.version}</version>
         </dependency>
         <dependency>
-            <groupId>uk.gov.justice.services</groupId>
-            <artifactId>framework-api-domain</artifactId>
-            <version>${framework-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.everit.json</groupId>
+            <groupId>com.github.everit-org.json-schema</groupId>
             <artifactId>org.everit.json.schema</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.squareup</groupId>
