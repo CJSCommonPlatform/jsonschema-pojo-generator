@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [1.5.3] - 2018-11-09
+### Changed
+- Upgraded utilities to version 1.16.1
+- Upgraded json schema catalog to version 1.4.2
+- Upgraded test-utils to version 1.18.1
+
 ## [1.5.2] - 2018-08-10
 ### Changed
 - Upgraded utilities to version 1.15.1
