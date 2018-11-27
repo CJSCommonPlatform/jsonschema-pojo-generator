@@ -18,6 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
@@ -96,9 +99,9 @@ public class AddFieldsAndMethodsToClassPlugin implements ClassModifyingPlugin {
                 classNameFactory,
                 pluginContext);
 
-       final MethodSpec.Builder constructorBuilder = constructorBuilder()
+        final MethodSpec.Builder constructorBuilder = constructorBuilder()
                 .addModifiers(PUBLIC)
-                .addParameters(constructorParameters)
+                .addParameters(constructorParameters).addAnnotation(JsonCreator.class)
                 .addCode(constructorStatements(fieldNames));
 
         if (additionalPropertiesDeterminer.shouldAddAdditionalProperties(classDefinition, pluginContext)) {
@@ -130,7 +133,10 @@ public class AddFieldsAndMethodsToClassPlugin implements ClassModifyingPlugin {
         return definitions.stream()
                 .map(definition -> {
                     final TypeName typeName = classNameFactory.createTypeNameFrom(definition, pluginContext);
-                    return ParameterSpec.builder(typeName, definition.getFieldName(), FINAL).build();
+                    return ParameterSpec.builder(typeName, definition.getFieldName(), FINAL)
+                            .addAnnotation(AnnotationSpec.builder(JsonProperty.class)
+                                    .addMember("value", "\"" + definition.getFieldName() + "\"").build())
+                            .build();
                 })
                 .collect(toList());
     }
