@@ -27,6 +27,10 @@
             <artifactId>org.everit.json.schema</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>
         </dependency>

@@ -27,10 +27,14 @@ import uk.gov.justice.generation.pojo.plugin.PluginContext;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
@@ -52,7 +56,7 @@ public class AddFieldsAndMethodsToClassPluginTest {
     private PluginContext pluginContext;
 
     @Test
-    public void shouldGenerateTypeSpecForClassDefinitionWithNoFields() throws Exception {
+    public void shouldGenerateTypeSpecForClassDefinitionWithNoFields() {
         final ClassDefinition classDefinition = new ClassDefinition(CLASS, "address");
 
         final TypeSpec.Builder typeSpecBuilder = classBuilder("ClassName");
@@ -71,11 +75,11 @@ public class AddFieldsAndMethodsToClassPluginTest {
         assertThat(typeSpec.name, is("ClassName"));
         assertThat(typeSpec.fieldSpecs.size(), is(0));
         assertThat(typeSpec.methodSpecs.size(), is(1));
-        assertThat(typeSpec.methodSpecs, hasItem(constructorBuilder().addModifiers(PUBLIC).build()));
+        assertThat(typeSpec.methodSpecs, hasItem(constructorBuilder().addModifiers(PUBLIC).addAnnotation(JsonCreator.class).build()));
     }
 
     @Test
-    public void shouldGenerateTypeSpecForClassDefinitionWithOneField() throws Exception {
+    public void shouldGenerateTypeSpecForClassDefinitionWithOneField() {
         final ClassDefinition classDefinition = new ClassDefinition(CLASS, "address");
         final FieldDefinition fieldDefinition = new FieldDefinition(STRING, "field");
         classDefinition.addFieldDefinition(fieldDefinition);
@@ -114,7 +118,11 @@ public class AddFieldsAndMethodsToClassPluginTest {
         assertThat(typeSpec.methodSpecs, hasItems(
                 constructorBuilder()
                         .addModifiers(PUBLIC)
-                        .addParameter(String.class, "field", FINAL)
+                        .addAnnotation(JsonCreator.class)
+                        .addParameter(ParameterSpec.builder(String.class, "field", FINAL)
+                                .addAnnotation(AnnotationSpec.builder(JsonProperty.class)
+                                        .addMember("value", "\"field\"").build())
+                                .build())
                         .addStatement("this.field = field")
                         .build(),
                 methodSpec)
@@ -122,7 +130,7 @@ public class AddFieldsAndMethodsToClassPluginTest {
     }
 
     @Test
-    public void shouldGenerateClassWithAdditionalPropertiesConstructor() throws Exception {
+    public void shouldGenerateClassWithAdditionalPropertiesConstructor() {
 
         final ClassDefinition classDefinition = new ClassDefinition(CLASS, "ClassWithAdditionalProperties");
         classDefinition.setAllowAdditionalProperties(true);
@@ -132,7 +140,7 @@ public class AddFieldsAndMethodsToClassPluginTest {
                 TypeName.get(String.class),
                 TypeName.get(Object.class));
 
-        final FieldSpec fieldSpec  = builder(map, "additionalProperties")
+        final FieldSpec fieldSpec = builder(map, "additionalProperties")
                 .addModifiers(PRIVATE, FINAL)
                 .build();
 
@@ -155,7 +163,6 @@ public class AddFieldsAndMethodsToClassPluginTest {
 
         final TypeSpec typeSpec = typeSpecBuilder.build();
 
-
         assertThat(typeSpec.name, is("ClassName"));
         assertThat(typeSpec.fieldSpecs.size(), is(1));
         assertThat(typeSpec.fieldSpecs, hasItem(fieldSpec));
@@ -163,6 +170,7 @@ public class AddFieldsAndMethodsToClassPluginTest {
         assertThat(typeSpec.methodSpecs, hasItems(
                 constructorBuilder()
                         .addModifiers(PUBLIC)
+                        .addAnnotation(JsonCreator.class)
                         .addParameter(map, "additionalProperties", FINAL)
                         .addStatement("this.additionalProperties = additionalProperties")
                         .build())
